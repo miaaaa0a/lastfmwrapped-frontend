@@ -89,23 +89,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             updateProgressBar(0);
-            const minutesResponse = await fetch(`http://127.0.0.1:8000/api/minuteslistened/${username}`);
+            const minutesResponse = await fetch(`/api/minuteslistened/${username}`);
             const minutesData = await minutesResponse.json();
             updateProgressBar(20);
 
-            const topSongResponse = await fetch(`http://127.0.0.1:8000/api/topsong/${username}`);
+            const topSongResponse = await fetch(`/api/topsong/${username}`);
             const topSongData = await topSongResponse.json();
             updateProgressBar(40);
 
-            const topFiveResponse = await fetch(`http://127.0.0.1:8000/api/top5songs/${username}`);
+            const topFiveResponse = await fetch(`/api/top5songs/${username}`);
             const topFiveData = await topFiveResponse.json();
             updateProgressBar(60);
 
-            const genreEvolutionResponse = await fetch(`http://127.0.0.1:8000/api/genreevolution/${username}`);
+            const genreEvolutionResponse = await fetch(`/api/genreevolution/${username}`);
             const genreEvolutionData = await genreEvolutionResponse.json();
             updateProgressBar(80);
 
-            const finalResponse = await fetch(`http://127.0.0.1:8000/api/finalimage/${username}`);
+            const finalResponse = await fetch(`/api/finalimage/${username}`);
             const finalData = await finalResponse.json();
             updateProgressBar(99);
 

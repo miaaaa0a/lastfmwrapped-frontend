@@ -9,6 +9,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.0.9"
+    "@astrojs/node": "^9.0.0",
+    "astro": "^5.0.9",
+    "http-proxy-middleware": "^3.0.3"
   }
 }
