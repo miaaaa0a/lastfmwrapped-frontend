@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 document.addEventListener('DOMContentLoaded', () => {
     const usernameInput = document.getElementById('username-input');
     const fetchButton = document.getElementById('fetch-stats');
@@ -13,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBar = document.querySelector('.progress-bar');
     const loadingScreen = document.querySelector('.loading-screen');
     const dimmer = document.querySelector('.dimmer');
+
+    var total_minutes = 0;
 
     const savedMode = localStorage.getItem('spotify-stats-mode') || 'dark';
     document.documentElement.className = savedMode + '-mode';
@@ -57,7 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updateProgressBar = (progress) => {
         progressContainer.style.opacity = '1';
-        progressBar.style.width = `${progress}%`;
+        let currwidth = Number(progressBar.style.width.replace("%", "").replace("px", ""));
+        progressBar.style.width = `${currwidth + progress}%`;
     };
 
     const enableLoadingScreen = () => {
@@ -89,40 +94,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             updateProgressBar(0);
-            const minutesResponse = await fetch(`/api/minuteslistened/${username}`);
-            const minutesData = await minutesResponse.json();
-            updateProgressBar(20);
-
-            const topSongResponse = await fetch(`/api/topsong/${username}`);
-            const topSongData = await topSongResponse.json();
-            updateProgressBar(40);
-
-            const topFiveResponse = await fetch(`/api/top5songs/${username}`);
-            const topFiveData = await topFiveResponse.json();
-            updateProgressBar(60);
-
-            const genreEvolutionResponse = await fetch(`/api/genreevolution/${username}`);
-            const genreEvolutionData = await genreEvolutionResponse.json();
-            updateProgressBar(80);
-
-            const finalResponse = await fetch(`/api/finalimage/${username}`);
-            const finalData = await finalResponse.json();
-            updateProgressBar(99);
-
-            await Promise.all([
-                loadImage(minutesListenedImg, minutesData.image),
-                loadImage(topSongImg, topSongData.image),
-                loadImage(topFiveImg, topFiveData.image),
-                loadImage(finalImg, finalData.image)
-            ]);
-            loadImages(genreEvolutionImgs, genreEvolutionData.images);
-
-            statsContainer.classList.remove('stats-hidden');
-            updateProgressBar(100);
-            
-            setTimeout(resetProgressBar, 500);
-            disableLoadingScreen();
-
+            let reqs = [
+                axios.get(`/api/minuteslistened/${username}`, {timeout: 0}).then(res => {
+                    loadImage(minutesListenedImg, res.data.image);
+                    total_minutes = res.data.minutes;
+                    updateProgressBar(20);
+                }),
+                axios.get(`/api/topsong/${username}`, {timeout: 0}).then(res => {
+                    loadImage(topSongImg, res.data.image);
+                    updateProgressBar(20);
+                }),
+                axios.get(`/api/top5songs/${username}`, {timeout: 0}).then(res => {
+                    loadImage(topFiveImg, res.data.image);
+                    updateProgressBar(20);
+                }),
+                axios.get(`/api/genreevolution/${username}`, {timeout: 0}).then(res => {
+                    loadImages(genreEvolutionImgs, res.data.images);
+                    updateProgressBar(20);
+                }),
+            ]
+            Promise.all(reqs).then(() => {
+                axios.get(`/api/finalimage/${username}/${total_minutes}`, {timeout: 0}).then(res => {
+                    loadImage(finalImg, res.data.image);
+                    updateProgressBar(20);
+                    statsContainer.classList.remove('stats-hidden');
+                
+                    setTimeout(resetProgressBar, 500);
+                    disableLoadingScreen();
+                });
+            });
         } catch (error) {
             console.error('Error fetching stats:', error);
             alert('Failed to retrieve stats. Please check the username and try again.');
