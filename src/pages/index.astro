@@ -1,11 +1,70 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import '../styles/global.css';
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>last.fm Wrapped</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="progress-container">
+        <div class="progress-bar"></div>
+    </div>
+    <div class="loading-screen">
+        <div class="dimmer">
+            <div class="spinner">
+                <i class="fas fa-circle-notch"></i>
+            </div>
+        </div>
+    </div>
+
+    <button id="mode-toggle" class="mode-toggle" aria-label="Toggle dark/light mode">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="container">
+        <h1>Your last.fm Wrapped</h1>
+        
+        <div class="input-section">
+            <input type="text" id="username-input" placeholder="Enter last.fm Username">
+            <button id="fetch-stats">Get My Stats</button>
+        </div>
+
+        <div id="stats-container" class="stats-hidden">
+            <div class="stat-card" id="minutes-listened">
+                <h2>Total Minutes Listened</h2>
+                <img src="" alt="Minutes Listened Visualization">
+            </div>
+
+            <div class="stat-card" id="top-song">
+                <h2>Top Song of the Year</h2>
+                <img src="" alt="Top Song Visualization">
+            </div>
+
+            <div class="stat-card" id="top-5-songs">
+                <h2>Top 5 Songs of the Year</h2>
+                <img src="" alt="Top 5 Songs Visualization">
+            </div>
+
+            <div class="stat-card" id="genre-evolution">
+                <h2>Genre Evolution</h2>
+                <div class="genreimgs">
+                    <img src="" alt="Genre Evolution 1">
+                    <img src="" alt="Genre Evolution 2">
+                    <img src="" alt="Genre Evolution 3">
+                </div>
+            </div>
+
+            <div class="stat-card" id="finalimage">
+                <h2>Finale</h2>
+                <img src="" alt="Total">
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/stats-fetcher.js"></script>
+</body>
+</html>
