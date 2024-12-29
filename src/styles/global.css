@@ -52,6 +52,7 @@ input, button {
     position: absolute;
     background-color: var(--dimmer);
     transition: opacity var(--transition-speed);
+    backdrop-filter: blur(10px);
 }
 
 .spinner {
@@ -115,7 +116,7 @@ input, button {
     padding: 40px;
     margin: 15px;
     width: 100%;
-    max-width: 1000px;
+    max-width: 85%;
     text-align: center;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     transition: background-color var(--transition-speed);
@@ -215,16 +216,20 @@ h1 {
 }
 
 .stat-card img {
-    max-width: 100%;
     max-height: 50vh;
-    width: 100%;
+    width: auto;
     height: auto;
     object-fit: contain;
-    border-radius: 8px;
+    border-radius: 8px !important;
     margin-bottom: 15px;
     opacity: 0;
     transform: scale(0.8);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.genreimgs img {
+    width: 100%;
+    max-width: 100%;
 }
 
 .stat-card img.image-loaded {
