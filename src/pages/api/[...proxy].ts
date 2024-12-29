@@ -10,6 +10,6 @@ const getProxyUrl = (request: Request) => {
 
 export const ALL: APIRoute = async ({ request }) => {
   const proxyUrl = getProxyUrl(request);
-  const response = await axios.get(proxyUrl.href, {params: request});
+  const response = await axios.get(proxyUrl.href, {params: request, responseType: 'text'});
   return new Response(response.data);
 };
