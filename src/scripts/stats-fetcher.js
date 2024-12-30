@@ -92,7 +92,14 @@ document.addEventListener('DOMContentLoaded', () => {
         resetProgressBar();
         enableLoadingScreen();
 
+
         try {
+            await axios.get(`/api/isuserprocessable/${username}`).then(res => {
+                let data = res.data;
+                if (!data.processable) {
+                    throw Error(`Can't process user! (${data.error})`);
+                }
+            });
             updateProgressBar(0);
             let reqs = [
                 axios.get(`/api/minuteslistened/${username}`, {timeout: 0}).then(res => {
@@ -124,8 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         } catch (error) {
-            console.error('Error fetching stats:', error);
-            alert('Failed to retrieve stats. Please check the username and try again.');
+            alert(`Failed to retrieve stats. ${error}`);
             resetProgressBar();
             disableLoadingScreen();
         }
