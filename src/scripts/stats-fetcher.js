@@ -74,6 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingScreen.style.display = 'none';
         dimmer.style.opacity = '0';
     }
+
+    window.addEventListener('unhandledrejection', e => {
+        alert(`Failed to retrieve stats. ${e.reason}`);
+        resetProgressBar();
+        disableLoadingScreen();
+    });
+    
     disableLoadingScreen();
 
     fetchButton.addEventListener('click', async () => {
@@ -103,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateProgressBar(0);
             let reqs = [
                 axios.get(`/api/minuteslistened/${username}`, {timeout: 0}).then(res => {
+                    console.log(res);
                     loadImage(minutesListenedImg, res.data.image);
                     total_minutes = res.data.minutes;
                     updateProgressBar(20);
@@ -116,8 +124,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     updateProgressBar(20);
                 }),
                 axios.get(`/api/genreevolution/${username}`, {timeout: 0}).then(res => {
-                    loadImages(genreEvolutionImgs, res.data.images);
-                    updateProgressBar(20);
+                    try {
+                        loadImages(genreEvolutionImgs, res.data.images);
+                        updateProgressBar(20);
+                    } catch {
+                        throw Error(`${res.data.error}`);
+                    }
                 }),
             ]
             Promise.all(reqs).then(() => {
@@ -129,6 +141,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(resetProgressBar, 500);
                     disableLoadingScreen();
                 });
+            })
+            .catch(function(e) {
+                throw Error(e);
             });
         } catch (error) {
             alert(`Failed to retrieve stats. ${error}`);
